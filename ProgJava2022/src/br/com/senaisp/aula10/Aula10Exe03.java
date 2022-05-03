@@ -56,7 +56,7 @@ public class Aula10Exe03 {
 			//
 		}while (intRes != 2);
 		sc.close();
-		//alterei o código aqui........
+		//Alterei na aula alguma coisa
 	}
 
 }
