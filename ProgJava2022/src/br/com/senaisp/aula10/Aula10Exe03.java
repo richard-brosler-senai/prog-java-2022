@@ -55,6 +55,9 @@ public class Aula10Exe03 {
 			} while (intRes != 1 && intRes != 2);
 			//
 		}while (intRes != 2);
+		System.out.println("Nossa temperatura agora é de 36.00 Celsius");
+		System.out.println("Se você estivesse nos EUA seria " + 
+				Aula10Exe04.calcularTemperatura(1,2,36));
 		sc.close();
 		//Alterei na aula alguma coisa
 	}
