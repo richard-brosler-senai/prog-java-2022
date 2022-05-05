@@ -2,7 +2,7 @@ package br.com.senaisp.aula13;
 
 import java.util.Scanner;
 
-public class Aula13Exe04 {
+public class Aula13Exe03 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
