@@ -2,7 +2,7 @@ package br.com.senaisp.aula13;
 
 import java.util.Scanner;
 
-public class Aula13Exe03 {
+public class Aula13Exe03Alterado {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -17,14 +17,7 @@ public class Aula13Exe03 {
 		//
 		do {
 			//mostrando o menu de opçoes
-			System.out.println("Menu de Opções");
-			System.out.println("1 - Cadastrar");
-			System.out.println("2 - Consultar pelo Id");
-			System.out.println("3 - Alterar pelo Id");
-			System.out.println("4 - Excluir pelo Id");
-			System.out.println("5 - Listar em ordem de Id");
-			System.out.println("9 - Fim do programa");
-			System.out.println("Escolha uma das opções:");
+			montarMenu();
 			intOpc = sc.nextInt();
 			//
 			int intDisponivel;
@@ -47,8 +40,7 @@ public class Aula13Exe03 {
 				} else {
 					System.out.println("Sem espaço para cadastramento!");
 				}
-				System.out.println("Digite enter para voltar ao menu");
-				sc.nextLine();
+				
 				break; //break do case
 			case 5: //Listagem
 				sc.nextLine();//para evitar o enter das opçoes;
@@ -58,71 +50,86 @@ public class Aula13Exe03 {
 						System.out.println(intI + " - " + strDados[intI][0]);
 					}
 				}
-				System.out.println("Digite enter para voltar ao menu");
-				sc.nextLine();
+				
 				break;
 			case 2: //consulta do cliente
 				System.out.println("Consultar o Nome pelo Id");
 				sc.nextLine(); //para pegar o enter do menu;
-				System.out.println("Digite o ID do nome a ser buscado:");
-				intDisponivel=sc.nextInt(); //digitar o id a ser buscado
-				if (intDisponivel>=0 && intDisponivel<10 && 
-					strDados[intDisponivel][1].equals("") ) {
-					System.out.println("Nome encontrado!");
-					System.out.println("Nome: " + strDados[intDisponivel][0]);
-				} else {
-					System.out.println("Nome não encontrado!");
-				}
+				intDisponivel = pesquisaCliente(strDados,sc);
 				sc.nextLine(); //para pegar o enter do id buscar
-				System.out.println("Digite enter para voltar ao menu");
-				sc.nextLine();
+				
 				break;
 			case 3: //Alteração
 				System.out.println("Alteração pelo Id");
 				sc.nextLine(); //para pegar o enter do menu;
-				System.out.println("Digite o ID do nome a ser buscado:");
-				intDisponivel=sc.nextInt(); //digitar o id a ser buscado
-				if (intDisponivel>=0 && intDisponivel<10 && 
-					strDados[intDisponivel][1].equals("") ) {
-					System.out.println("Nome encontrado!");
-					System.out.println("Nome: " + strDados[intDisponivel][0]);
-					//Processo de alteração
-					sc.nextLine(); //para pegar o enter do id buscar
+				//Buscando o cliente
+				intDisponivel=pesquisaCliente(strDados, sc);
+				sc.nextLine(); //para pegar o enter do id buscar
+				//Processo de alteração
+				if (intDisponivel>-1) {
 					System.out.println("Digite o nome para substituir o atual:");
 					strDados[intDisponivel][0]=sc.nextLine();
-				} else {
-					System.out.println("Nome não encontrado!");
 				}
-				System.out.println("Digite enter para voltar ao menu");
-				sc.nextLine();
+				
+				
 				break;
 			case 4: //Exclusão
 				System.out.println("Exclusão pelo Id");
 				sc.nextLine(); //para pegar o enter do menu;
-				System.out.println("Digite o ID do nome a ser deletado:");
-				intDisponivel=sc.nextInt(); //digitar o id a ser buscado
-				if (intDisponivel>=0 && intDisponivel<10 && 
-					strDados[intDisponivel][1].equals("") ) {
-					System.out.println("Nome encontrado!");
-					System.out.println("Nome: " + strDados[intDisponivel][0]);
-					//Processo de alteração
+				//Buscando o cliente
+				intDisponivel=pesquisaCliente(strDados, sc);
+				//Processo de exclusão
+				if (intDisponivel>-1) {
 					System.out.println("Confirma a exclusão?(1-sim,2-não):");
 					int intOpcExcl = sc.nextInt();
 					if (intOpcExcl==1) {
 						strDados[intDisponivel][1]="*";
 					}
 					sc.nextLine(); //para pegar o enter do id buscar
-				} else {
-					System.out.println("Nome não encontrado!");
 				}
-				System.out.println("Digite enter para voltar ao menu");
-				sc.nextLine();
+				
 				break;
 
 			}
-			
+			System.out.println("Digite enter para voltar ao menu");
+			sc.nextLine();
 		}while(intOpc!=9);
 
+	}
+	/**
+	 * Função que pesquisa o cliente na matriz informada e retorna o id se encontrou
+	 * caso contrário, retorna -1
+	 * @param strMatriz Deve-se passar a matriz a ser pesquisada
+	 * @param sc Deve-se passar o objeto scanner para ser utilizado
+	 * @return Retorna o id pesquisado ou -1 se não encontrou o cadastro
+	 */
+	public static int pesquisaCliente(String strMatriz[][],Scanner sc) {
+		int intRet;
+		
+		System.out.println("Digite o ID do nome a ser Pesquisado:");
+		intRet=sc.nextInt(); //digitar o id a ser buscado
+		if (intRet>=0 && intRet<10 && 
+				strMatriz[intRet][1].equals("") ) {
+			System.out.println("Nome encontrado!");
+			System.out.println("Nome: " + strMatriz[intRet][0]);
+		} else {
+			System.out.println("Nome não encontrado!");
+			intRet=-1; //Não encontrei
+		}		
+		return intRet;
+	}
+	/**
+	 * Procedimento de montagem do menu
+	 */
+	public static void montarMenu() {
+		System.out.println("Menu de Opções");
+		System.out.println("1 - Cadastrar");
+		System.out.println("2 - Consultar pelo Id");
+		System.out.println("3 - Alterar pelo Id");
+		System.out.println("4 - Excluir pelo Id");
+		System.out.println("5 - Listar em ordem de Id");
+		System.out.println("9 - Fim do programa");
+		System.out.println("Escolha uma das opções:");	
 	}
 
 }
