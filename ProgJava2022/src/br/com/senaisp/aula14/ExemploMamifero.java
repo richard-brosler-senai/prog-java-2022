@@ -8,10 +8,12 @@ public class ExemploMamifero {
 		// TODO Auto-generated method stub
 		//Objeto mamifero
 		Mamiferos boi = new Mamiferos();
+		System.out.println("Criando um Boi");
 		boi.Boca = "Pequena";
 		boi.Pele = "Bege";
 		boi.Olhos = "Marrom";
 		boi.Peso = 800.5;
+		System.out.println(boi.Boca);
 		//Objeto mamifero
 		Mamiferos humano = new Mamiferos();
 		humano.Boca = "Pequena";
