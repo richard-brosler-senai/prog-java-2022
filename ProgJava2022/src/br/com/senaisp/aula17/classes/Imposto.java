@@ -9,6 +9,16 @@ package br.com.senaisp.aula17.classes;
 public class Imposto {
 	private double BaseCalculo;
 	private double Aliquota;
+	//Constructor
+	public Imposto() {
+		this.BaseCalculo = 0;
+		this.Aliquota = 0;
+	}
+	//Overload de metodos
+	public Imposto(double baseCalculo, double aliquota) throws Exception {
+		this.setBaseCalculo(baseCalculo);
+		this.setAliquota(aliquota);
+	}
 	/**
 	 * Metodo que retorna o valor do imposto calculado com base
 	 * nos campos BaseCalculo e Aliquota
