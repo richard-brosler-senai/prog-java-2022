@@ -1,6 +1,5 @@
 package br.com.senaisp.aula19;
 
-import java.security.InvalidParameterException;
 import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
@@ -50,13 +49,41 @@ public class GestaoRH {
 			case 6:
 				listagemFolha(listaFolha);
 				break;
+			case 7:
+				exclusaoFolha(listaFolha, sc);
+				break;
 			}
 			System.out.println("Pressione enter para voltar ao menu");
 			sc.nextLine();
 		} while(intOpc != 9);
 
 	}
-	
+	private static void exclusaoFolha(FolhaPagamento[] listaFolha, 
+				Scanner sc) {
+		int intIdFunc=-1;
+		do {
+			System.out.println("Digite a chapa do funcionário:");
+			int intChapa=sc.nextInt();
+			sc.nextLine();
+			//Funcionário deve existir para lançá-lo na folha
+			intIdFunc=pesqLancto(listaFolha, intChapa);
+			if (intIdFunc>-1) {
+				System.out.println("Deseja mesmo excluir? (1-sim, 2-não)");
+				int intResp = sc.nextInt();
+				sc.nextLine();
+				if (intResp==1) {
+					listaFolha[intIdFunc]=null;
+				}
+				break;
+			} else {
+				System.out.println("Lançamento não encontrado!");
+			}
+		}while (true);
+	}
+	/**
+	 * Método de listagem da folha de pagamento
+	 * @param listaFolha Deve ser informada a lista da folha de pagamento
+	 */
 	private static void listagemFolha(FolhaPagamento[] listaFolha) {
 		System.out.println("Listagem da folha");
 		System.out.println("# - Chapa - Salário Líquido");
@@ -68,7 +95,12 @@ public class GestaoRH {
 			}
 		}
 	}
-
+	/**
+	 * Método que fará o lançamento na folha de pagamento
+	 * @param listaFolha Deve ser informada a lista da folha de pagamento
+	 * @param listaFuncionario Deve ser informada a lista de funcionários para pesquisa de funcionários
+	 * @param sc Deve ser informado o objeto scanner para digitação via teclado.
+	 */
 	private static void lancamentoFolha(FolhaPagamento[] listaFolha, Funcionario[] listaFuncionario, Scanner sc) {
 		System.out.println("Lançamento na folha");
 		//pesquisando o item disponivel
@@ -87,7 +119,14 @@ public class GestaoRH {
 			System.out.println("Folha de pagamento cheia!");
 		}
 	}
-
+	/**
+	 * Método auxiliar para cadastramento na folha de pagamento
+	 * @param folhaPagamento Deve ser informado o objeto da folha de pagamento para manutenção
+	 * @param sc Deve ser informado o objeto Scanner para entrada de dados via teclado
+	 * @param listaFuncionario Deve ser informada a lista de funcionários para pesquisa do funcionário
+	 * @param listaFolha Deve ser informada a lista da folha para pesquisa se existe lançamento do funcionário na
+	 * listagem da folha
+	 */
 	private static void manutencaoFolhaPagamento(FolhaPagamento folhaPagamento, Scanner sc,
 			Funcionario[] listaFuncionario, FolhaPagamento[] listaFolha) {
 		int intIdFunc=-1;
@@ -135,7 +174,13 @@ public class GestaoRH {
 			}
 		}while (true);
 	}
-
+	/**
+	 * Função para pesquisa do lançamento na folha
+	 * @param listaFolha Deve ser informada a lista da folha para ser pesquisada
+	 * @param intChapa Deve ser informada a chapa do funcionário para ser pesquisada
+	 * na lista da folha
+	 * @return Retorna o id de lançamento na lista da folha
+	 */
 	private static int pesqLancto(FolhaPagamento[] listaFolha, int intChapa) {
 		int intRet = -1;
 		for (int intI=0;intI<LIMITE_FUNCIONARIOS;intI++) {
@@ -147,7 +192,13 @@ public class GestaoRH {
 		}
 		return intRet;
 	}
-
+	/**
+	 * Método de exclusão de funcionários da lista de funcionários.
+	 * @param listaFuncionario Deve ser informada a lista de funcionários
+	 * para que possa ser pesquisado e excluído o funcionário.
+	 * @param sc Deve ser informado o objeto Scanner para entrada de dados
+	 * via teclado.
+	 */
 	private static void exclusaoFuncionario(Funcionario[] listaFuncionario, Scanner sc) {
 		System.out.println("Exclusão do Funcionário");
 		int intFun = pesquisarFuncionario(listaFuncionario,sc);
@@ -164,7 +215,13 @@ public class GestaoRH {
 			System.out.println("Funcionário não encontrado!");
 		}
 	}
-
+	/**
+	 * Método de alteração de funcionários
+	 * @param listaFuncionario Deve ser informada a lista de funcionários
+	 * para ser pesquisada e alterado o funcionário.
+	 * @param sc Deve ser informado o objeto Scanner para que possa ser
+	 * dado entrada de dados via teclado.
+	 */
 	private static void alteracaoFuncionario(Funcionario[] listaFuncionario, Scanner sc) {
 		System.out.println("Alteração do Funcionário");
 		int intFun = pesquisarFuncionario(listaFuncionario,sc);
@@ -188,7 +245,12 @@ public class GestaoRH {
 		System.out.println("Nr. Dep. do funcionário.: " +funcionario.getNrDependentes());
 		System.out.println("Salário do funcionário..: " +funcionario.getSalario());
 	}
-
+	/**
+	 * Método de pesquisa de funcionários
+	 * @param listaFuncionario Deve ser informada a lista de funcionários para ser pesquisada.
+	 * @param sc Deve ser informado o objeto Scanner para entrada de dados via teclado.
+	 * @return Retorna o id de lançamento na lista de funcionários ou -1 se não encontrou.
+	 */
 	private static int pesquisarFuncionario(Funcionario[] listaFuncionario, Scanner sc) {
 		System.out.println("Digite o número da chapa ser pesquisada:");
 		int intChapa=sc.nextInt();
