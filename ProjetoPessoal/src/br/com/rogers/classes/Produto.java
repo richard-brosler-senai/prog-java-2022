@@ -1,5 +1,7 @@
 package br.com.rogers.classes;
 
+import java.util.List;
+
 public class Produto {
 	/* 
 	 *  -id
@@ -16,5 +18,6 @@ public class Produto {
 	private String dataValidade;
 	private String dataFabricacao;
 	
+	private List<Produto> listaProdutos;
 	
 }

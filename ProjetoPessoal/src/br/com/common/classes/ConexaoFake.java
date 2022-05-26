@@ -5,10 +5,10 @@ import java.util.List;
 
 public class ConexaoFake {
 	private static ConexaoFake instancia;
-	private List<Object> listaObjetos;
+	private List<ClasseBase> listaObjetos;
 	
 	private ConexaoFake() {
-		listaObjetos = new ArrayList<Object>();
+		listaObjetos = new ArrayList<ClasseBase>();
 	}
 	
 	public static ConexaoFake getInstance() {
@@ -18,7 +18,7 @@ public class ConexaoFake {
 		return instancia;
 	}
 	
-	public List<Object> getListaObjetos(){
+	public List<ClasseBase> getListaObjetos(){
 		return listaObjetos;
 	}
 }

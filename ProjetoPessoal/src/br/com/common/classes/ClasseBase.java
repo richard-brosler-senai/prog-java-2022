@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ClasseBase {
 	
-	protected List<Object> listaObjetos;
+	protected List<ClasseBase> listaObjetos;
 	private int id;
 	
 	public ClasseBase() {
@@ -24,22 +24,69 @@ public class ClasseBase {
 		int intId = pesqItem(getId());
 		if (intId==-1) {
 			//Criar o objeto cliente para adicionar as informações
-			ClasseBase item = (ClasseBase) Class.forName(getClass().getName()).getConstructor(String.class).newInstance();
-			//Setando os dados para o novo objeto
-			item.setId(getId());
-			base2Item(item);
-			listaObjetos.add(item);
+			ClasseBase item;
+			try {
+				item = this.getClass().getDeclaredConstructor().newInstance();
+				//Setando os dados para o novo objeto
+				item.setId(getId());
+				base2Item(item);
+				listaObjetos.add(item);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 		} else {
 			System.out.println("Já existe esse Objeto!");
 		}		
 	}
 
+	public void consultar() {
+		int intId=pesqItem(getId());
+		if (intId>-1) {
+			ClasseBase item = listaObjetos.get(intId);
+			item2Base(item);
+		} else {
+			System.out.println("Item Não cadastrado!");
+		}			
+	}
+	
+	public void alterar() {
+		int intId=pesqItem(getId());
+		if (intId>-1) {
+			ClasseBase item = listaObjetos.get(intId);
+			base2Item(item);
+		} else {
+			System.out.println("Item Não cadastrado!");
+		}		
+	}
+
+	public void excluir() {
+		int intId=pesqItem(getId());
+		if (intId>-1) {
+			ClasseBase item = listaObjetos.get(intId);
+			base2Item(item);
+		} else {
+			System.out.println("Item Não cadastrado!");
+		}		
+	}
+	
 	protected void base2Item(ClasseBase item) {
 		
 	}
 
-	private int pesqItem(int id2) {
+	protected void item2Base(ClasseBase item) {
 		// TODO Auto-generated method stub
-		return 0;
+		
+	}
+
+	private int pesqItem(int id2) {
+		int intRet = -1;
+		for (int intI=0;intI<listaObjetos.size();intI++) {
+			if (listaObjetos.get(intI).getId()==id2) {
+				intRet=intI;
+				break;
+			}
+		}
+		return intRet;
 	}
 }

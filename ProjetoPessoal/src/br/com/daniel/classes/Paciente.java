@@ -3,40 +3,14 @@ package br.com.daniel.classes;
 import br.com.common.classes.ClasseBase;
 
 public class Paciente extends ClasseBase {
-	private int id;
+
 	private String nome;
 	private String endereco;
 	private String email;
 	private int idade;
 	
-	public void adicionar() {
+
 		
-	}
-	
-	public int pesqId(int id) {
-		int intRet = -1;
-		for (int intI=0;intI<listaObjetos.size();intI++) {
-			Paciente pac =(Paciente) listaObjetos.get(intI);
-			if (pac.getId()==id) {
-				intRet = intI;
-				break;
-			}
-		}
-		return intRet;
-	}
-	
-	public void consultar() {
-		
-	}
-	
-	public void alterar() {
-		
-	}
-	
-	public void excluir() {
-		
-	}
-	
 	public void listarPacientes() {
 		
 	}
@@ -45,14 +19,7 @@ public class Paciente extends ClasseBase {
 		
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	
 	public String getNome() {
 		return nome;
 	}
