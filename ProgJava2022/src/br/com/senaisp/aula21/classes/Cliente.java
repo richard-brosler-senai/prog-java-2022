@@ -12,7 +12,6 @@ public class Cliente {
 	private String endereco;
 	
 	public Cliente() {
-		super();
 		ConexaoFake fake = ConexaoFake.getInstance();
 		//listaClientes = new ArrayList<Cliente>();
 		listaClientes = fake.getListaCliente();
