@@ -9,16 +9,37 @@ public class Paciente extends ClasseBase {
 	private String email;
 	private int idade;
 	
-
-		
-	public void listarPacientes() {
-		
+	@Override
+	public void novo() {
+		super.novo();
+		nome = "";
+		endereco = "";
+		email = "";
+		idade = 0;
+	}
+	@Override
+	public void mostrar() {
+		super.mostrar();
+		System.out.println("Nome.....: "+getNome());
+		System.out.println("Endereco.: "+getEndereco());
+		System.out.println("E-mail...: "+getEmail());
+		System.out.println("Idade....: "+getIdade());
 	}
 	
-	public void mostrarPaciente() {
-		
+	@Override
+	protected void listaCabecalhoLista() {
+		System.out.println("Listagem de Itens");
+		System.out.println("---------------------------");
+		System.out.println("# - Id - Idade - Nome");
 	}
-
+	
+	@Override
+	protected void listaItem(ClasseBase it) {
+		Paciente pac = (Paciente) it;
+		System.out.print(pac.getId() + " - ");
+		System.out.print(pac.getIdade() + " - ");
+		System.out.println(pac.getNome() + " - " + pac.toString());
+	}
 	
 	public String getNome() {
 		return nome;
@@ -50,5 +71,23 @@ public class Paciente extends ClasseBase {
 
 	public void setIdade(int idade) {
 		this.idade = idade;
+	}
+
+	@Override
+	protected void base2Item(ClasseBase item) {
+		Paciente pac = (Paciente) item; 
+		pac.setEmail(email);
+		pac.setEndereco(endereco);
+		pac.setIdade(idade);
+		pac.setNome(nome);
+	}
+
+	@Override
+	protected void item2Base(ClasseBase item) {
+		Paciente pac = (Paciente) item; 
+		email = pac.getEmail();
+		endereco = pac.getEndereco();
+		idade = pac.getIdade();
+		nome = pac.getNome();
 	}
 }
