@@ -13,16 +13,12 @@ public class Aula09Exe01 {
 		}
 		*/
 		//Usando o while
-		int intLinha=1; 
-		int intColuna;
-		while(intLinha<10) {
-			intColuna=1;
-			while(intColuna<10) {
-				System.out.print(intLinha+"-"+intColuna+" ");
-				intColuna++;
+		for (int lin=0;lin<10;lin++) {
+			for (int col=0;col<10;col++) {
+				System.out.print(lin+"-"+col+" ");
 			}
 			System.out.println();
-			intLinha++;
+			
 		}
 		
 	}
