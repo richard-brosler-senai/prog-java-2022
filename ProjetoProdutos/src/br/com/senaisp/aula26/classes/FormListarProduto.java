@@ -117,7 +117,7 @@ public class FormListarProduto extends JFrame {
 		this.prod = prod;
 		for(int intLin=0;intLin<prod.getListaSize();intLin++) {
 			Produto it = prod.getListaProdutos().get(intLin);
-			Object item[] = {  ("0000000"+it.getCodigo()), 
+			Object item[] = { String.format("%010d",it.getCodigo()), 
 							  it.getDescricao(),
 							  it.getPreco() 
 							};
