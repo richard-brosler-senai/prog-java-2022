@@ -4,14 +4,19 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.NumberFormatter;
 
 import br.com.senaisp.classes.Produto;
 
@@ -47,9 +52,13 @@ public class FormProdutosManutencao extends JFrame {
 	 * Create the frame.
 	 */
 	public FormProdutosManutencao() {
+		EventoClick evt = new EventoClick();
+		
 		setTitle("Manuten\u00E7\u00E3o Produtos");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 450);
+		setLocationRelativeTo(null);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -60,9 +69,11 @@ public class FormProdutosManutencao extends JFrame {
 		
 		btnConfirmar = new JButton("Confirmar");
 		pnlBotoes.add(btnConfirmar);
+		btnConfirmar.addActionListener(evt);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		pnlBotoes.add(btnCancelar);
+		btnCancelar.addActionListener(evt);
 		
 		JPanel pnlMeio = new JPanel();
 		contentPane.add(pnlMeio, BorderLayout.NORTH);
@@ -100,8 +111,16 @@ public class FormProdutosManutencao extends JFrame {
 		JLabel lblSaldo = new JLabel("Saldo");
 		pnlSaldo.add(lblSaldo);
 		
-		fmtSaldo = new JFormattedTextField();
+		NumberFormat fmnm = NumberFormat.getInstance();
+		NumberFormatter fmnmi = new NumberFormatter(fmnm);
+		fmnmi.setValueClass(Integer.class);
+		fmnmi.setMinimum(0);
+		fmnmi.setMaximum(Integer.MAX_VALUE);
+		fmnmi.setAllowsInvalid(false);
+		
+		fmtSaldo = new JFormattedTextField(fmnmi);
 		fmtSaldo.setColumns(10);
+		fmtSaldo.setValue(0);
 		pnlSaldo.add(fmtSaldo);
 		
 		JPanel pnlPreco = new JPanel();
@@ -112,8 +131,15 @@ public class FormProdutosManutencao extends JFrame {
 		JLabel lblPreco = new JLabel("Pre\u00E7o");
 		pnlPreco.add(lblPreco);
 		
-		fmtPreco = new JFormattedTextField();
+		NumberFormat fmnPr = NumberFormat.getCurrencyInstance();
+		NumberFormatter fmnPri = new NumberFormatter(fmnPr);
+		fmnPri.setMinimum(0.00);
+		fmnPri.setMaximum(999999999999.99);
+		fmnPri.setAllowsInvalid(false);
+		
+		fmtPreco = new JFormattedTextField(fmnPri);
 		fmtPreco.setColumns(15);
+		fmtPreco.setValue(0.00);
 		pnlPreco.add(fmtPreco);
 		
 		JPanel pnlLocalEstoque = new JPanel();
@@ -135,10 +161,10 @@ public class FormProdutosManutencao extends JFrame {
 
 	public void setTipoOperacao(int tipoOperacao) {
 		this.tipoOperacao = tipoOperacao;
+		textId.setEnabled(false);
 		switch (tipoOperacao) {
 		case 1 : //adicionar
 		case 3 : //alterar
-			textId.setEnabled(false);
 			textDescricao.setEnabled(true);
 			fmtPreco.setEnabled(true);
 			fmtSaldo.setEnabled(true);
@@ -146,7 +172,6 @@ public class FormProdutosManutencao extends JFrame {
 			break;
 		case 2://consultar
 		case 4://excluir
-			textId.setEnabled(false);
 			textDescricao.setEnabled(false);
 			fmtPreco.setEnabled(false);
 			fmtSaldo.setEnabled(false);
@@ -163,6 +188,52 @@ public class FormProdutosManutencao extends JFrame {
 
 	public void setProd(Produto prod) {
 		this.prod = prod;
+		if (prod!=null) {
+			textId.setText(Integer.toString(prod.getId()));
+			textDescricao.setText(prod.getDescricao());
+			fmtSaldo.setValue(prod.getSaldo());
+			fmtPreco.setValue(prod.getPreco());
+			textLocalEstoque.setText(prod.getLocal_estoque());
+		}
 	}
+	class EventoClick implements ActionListener {
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JButton obj = (JButton) e.getSource();
+			if (obj.getText()=="Confirmar") {
+				boolean bolTeste=true;
+				if (tipoOperacao!=4) {
+					prod.setDescricao(textDescricao.getText());
+					prod.setSaldo((int) fmtSaldo.getValue());
+					prod.setPreco((double) fmtPreco.getValue());
+					prod.setLocal_estoque(textLocalEstoque.getText());
+					if (tipoOperacao==1) {
+						bolTeste = prod.create();
+					} else {
+						bolTeste = prod.update();
+					}
+				} else { //Exclusão
+					if (JOptionPane.
+							showConfirmDialog(null, 
+									"Confirma Exclusão?", 
+									"Confirmação de Exclusão", 
+									JOptionPane.OK_CANCEL_OPTION)==
+									JOptionPane.OK_OPTION) {
+						bolTeste = prod.delete();
+					}
+				}
+				if (!bolTeste) {
+					JOptionPane.showMessageDialog(null,
+							"Ocorreu um problema! Erro:" + 
+									prod.getMsgErro());
+				}
+				dispose();
+			} else {
+				dispose();
+			}
+			
+		}
+		
+	}
 }
