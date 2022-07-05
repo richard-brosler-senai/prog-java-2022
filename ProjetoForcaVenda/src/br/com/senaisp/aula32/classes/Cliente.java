@@ -41,8 +41,9 @@ public class Cliente {
 		conn.conectarBD();
 		String strDtNasc = null;
 		if (data_nasc!=null) strDtNasc = dtFmtBD.format(data_nasc);
-		String sql = "insert into cliente(nome,endereco,numero,complemento,bairro,cidade,uf,cep,cpf,rg,data_nasc)\r\n"
-					+ "values (?,?,?,?,?,?,?,?,?,?,?)";
+		String sql = "insert into cliente(nome,endereco,numero,complemento,"
+				+ "bairro,cidade,uf,cep,cpf,rg,data_nasc) "
+				+ "values (?,?,?,?,?,?,?,?,?,?,?)";
 		PreparedStatement stmt = conn.getConector().prepareStatement(sql, 
 								PreparedStatement.RETURN_GENERATED_KEYS);
 		stmt.setString(1, nome);
