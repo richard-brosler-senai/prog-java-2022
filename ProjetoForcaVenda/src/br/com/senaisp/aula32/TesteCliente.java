@@ -30,7 +30,7 @@ public class TesteCliente {
 			e.printStackTrace();
 		}
 		//*/
-		/*
+		
 		cli.setId(6);
 		try {
 			if (cli.ler()) {
@@ -40,11 +40,10 @@ public class TesteCliente {
 				System.out.println("Complemento: " + cli.getComplemento());
 				System.out.println("Data Nascimento: " + cli.getData_nasc());
 				
-				/ *
 				cli.setNome(cli.getNome() + " - Alterado");
 				cli.setComplemento("Complemento colocado");
 				cli.alterar();
-				* /
+
 				System.out.println("Confirma a exclusão? (Sim/Não)");
 				Scanner scn = new Scanner(System.in);
 				String conf = scn.nextLine();
@@ -53,6 +52,7 @@ public class TesteCliente {
 					System.out.println("Registro apagado com sucesso!");
 				}
 				scn.close();
+				
 				
 			} else {
 				System.out.println("Cliente não encontrado!");
@@ -64,7 +64,6 @@ public class TesteCliente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
 	}
 
 }
