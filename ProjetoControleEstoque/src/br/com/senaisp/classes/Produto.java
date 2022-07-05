@@ -8,19 +8,20 @@ import java.sql.SQLException;
 import javax.swing.table.DefaultTableModel;
 
 public class Produto {
+	private ConexaoBD conn;
+	
 	private int id;
 	private String descricao;
 	private int saldo;
 	private double preco;
-	private String local_estoque;
-	
-	private ConexaoBD conn;
+	private String localEstoque;
+
 	private boolean haErro;
+
 	private String msgErro;
 	
 	public Produto() {
 		conn = ConexaoBD.getInstance();
-		novo();
 	}
 	
 	public void novo() {
@@ -28,129 +29,92 @@ public class Produto {
 		descricao = null;
 		saldo = 0;
 		preco = 0;
-		local_estoque = null;
+		localEstoque = null;
 	}
 	
 	public boolean create() {
 		boolean ret = false;
-		String sql = "insert into produtos(descricao,saldo,"
-					+ "preco,local_estoque) values (?,?,?,?)";
 		try {
 			conn.conectarBD();
-			PreparedStatement stmt = 
-	conn.getConector().prepareStatement(sql,
-			PreparedStatement.RETURN_GENERATED_KEYS);
-			//Setando os parametros
+			String sql = "insert into produtos(descricao,saldo,preco,local_estoque) values (?,?,?,?)";
+			PreparedStatement stmt = conn.getConector()
+					.prepareStatement(sql, 
+							PreparedStatement.RETURN_GENERATED_KEYS);
+			
 			stmt.setString(1, descricao);
 			stmt.setInt(2, saldo);
 			stmt.setDouble(3, preco);
-			stmt.setString(4, local_estoque);
-			//Executando o comando de inserção
+			stmt.setString(4, localEstoque);
+			
 			int rowsAff = stmt.executeUpdate();
 			//log
 			System.out.println("Linhas inseridas: " + rowsAff);
-			//Obtendo o valor do id gerado
 			ResultSet rs = stmt.getGeneratedKeys();
 			rs.next();
-			id = rs.getInt(1); //Só há uma coluna, por isso 1
-			//log
-			System.out.println("ID -> " + id);
-			//Se tudo ocorreu bem, chegou até aqui e está tudo certo
-			ret = true;
-			//Desconectando do banco de dados
+			id = rs.getInt(1);
 			conn.desconectarBD();
+			ret = true;
 		} catch (SQLException e) {
 			haErro = true;
 			msgErro = e.getMessage();
 		}
 		return ret;
 	}
-
+	
 	public boolean read() {
 		boolean ret = false;
-		String sql = "select id, descricao, saldo, preco, "
-					+ "local_estoque from produtos where id=?";
 		try {
 			conn.conectarBD();
-			//preparando a instrução
+			String sql = "select descricao, saldo, preco, "
+					+ "local_estoque from produtos where id = ?";
 			PreparedStatement stmt = conn.getConector()
 					.prepareStatement(sql);
-			//Setando os parametros
 			stmt.setInt(1, id);
-			//Executando a instrução
 			ResultSet rs = stmt.executeQuery();
-			//Verificando se encontrou o dado
 			if (rs.next()) {
-				//log
-				System.out.println("Encontrou o registro!");
-				id = rs.getInt(1);
-				descricao = rs.getString(2);
-				saldo = rs.getInt(3);
-				preco = rs.getDouble(4);
-				local_estoque = rs.getString(5);
+				descricao = rs.getString(1);
+				saldo = rs.getInt(2);
+				preco = rs.getDouble(3);
+				localEstoque = rs.getString(4);
+				
+				conn.desconectarBD();
 				
 				ret = true;
 			} else {
-				//log
-				System.out.println("Não encontrou o registro!");
+				haErro = false;
+				msgErro = "Registro não Encontrado!";
 			}
-			conn.desconectarBD();
 		} catch (SQLException e) {
 			haErro = true;
 			msgErro = e.getMessage();
 		}
+		
 		return ret;
 	}
 	
 	public boolean update() {
-		boolean ret = false;
-		String sql = "update produtos set "
-					+ "descricao = ?, "
-				    + "saldo = ?,"
-					+ "preco = ?, "
-					+ "local_estoque = ? "
-					+"where id = ?";
+		boolean ret=false;
+		
 		try {
 			conn.conectarBD();
+			String sql = "update produtos set descricao=?, saldo=?, "
+			 			+ "preco=?, local_estoque=? where id=?";
+			
 			PreparedStatement stmt = conn.getConector()
 					.prepareStatement(sql);
-			//setando os valores
+			
 			stmt.setString(1, descricao);
 			stmt.setInt(2, saldo);
 			stmt.setDouble(3, preco);
-			stmt.setString(4, local_estoque);
+			stmt.setString(4, localEstoque);
+			
 			stmt.setInt(5, id);
-			//executando a alteração
+			
 			int rowsAff = stmt.executeUpdate();
 			//log
-			System.out.println("Linhas alteradas: "+rowsAff);
-			//desconectando do banco de dados
+			System.out.println("Registros alterados: "+ rowsAff);
 			conn.desconectarBD();
 			ret = true;
-		} catch (SQLException e) {
-			haErro = true;
-			msgErro = e.getMessage();
-		}
-		
-		return ret;
-	}
-
-	public boolean delete() {
-		boolean ret = false;
-		String sql = "delete from produtos where id=?";
-		try {
-			conn.conectarBD();
-			//preparando a instrução para executar
-			PreparedStatement stmt = 
-					conn.getConector().prepareStatement(sql);
-			//setando o parametro para executar
-			stmt.setInt(1, id);
-			//executando a instrução
-			int rowsAff = stmt.executeUpdate();
-			ret = true;
-			//log
-			System.out.println("Registros deletados: " +rowsAff);
-			conn.desconectarBD();
 		} catch (SQLException e) {
 			haErro = true;
 			msgErro = e.getMessage();
@@ -159,132 +123,99 @@ public class Produto {
 		return ret;
 	}
 	
-	public boolean findByDescricao(String value) {
+	public boolean delete() {
 		boolean ret = false;
-		String sql = "select id, descricao, saldo, "
-				   + "       preco, local_estoque "
-				   + "from produtos "
-				   + "where descricao = ?";
 		try {
 			conn.conectarBD();
-			//preparando a instrução
-			PreparedStatement stmt = 
-					conn.getConector().prepareStatement(sql);
-			//setando o parametro
-			stmt.setString(1, value);
-			//executando a query
-			ResultSet rs = stmt.executeQuery();
-			//Se encontrou
-			if (rs.next()) {
-				id = rs.getInt(1);
-				descricao = rs.getString(2);
-				saldo = rs.getInt(3);
-				preco = rs.getDouble(4);
-				local_estoque = rs.getString(5);
-				ret = true;
-			} 
+			String sql = "delete from produtos where id=?";
+			PreparedStatement stmt = conn.getConector().prepareStatement(sql);
+			stmt.setInt(1, id);
+			
+			int rowsAff = stmt.executeUpdate();
+			//log
+			System.out.println("Linhas excluídas: " + rowsAff);
 			conn.desconectarBD();
+			ret = true;
 		} catch (SQLException e) {
 			haErro = true;
 			msgErro = e.getMessage();
-		}
+		}		
 		return ret;
 	}
 	
 	public DefaultTableModel getListaProdutos() {
 		DefaultTableModel ret = null;
-		String sql = "select id, descricao, saldo, "
-				   + "preco, local_estoque, created_at "
-				   + "from produtos "
-				   + "order by id "
-				   + "limit 100"; //limitando a 100 registros
+		
 		try {
 			conn.conectarBD();
-			//preparando a instrução
-			PreparedStatement stmt = 
-					conn.getConector().prepareStatement(sql);
-			//executando a instrução, pois não temos parametros
+			String sql = "select id, descricao, saldo, preco, local_estoque "
+						+ "from produtos order by id limit 100";
+			PreparedStatement stmt = conn.getConector().prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
-			//Obtendo informações dos registros que retornaram
 			ResultSetMetaData rsm = stmt.getMetaData();
-			//Montando o cabeçalho dos dados
+			
 			String titulos[] = new String[rsm.getColumnCount()];
-			//obtendo o nome das colunas
-			for (int intI=1;intI<=rsm.getColumnCount();intI++) {
-				titulos[intI - 1] = rsm.getColumnName(intI);
+			for (int intI=1;intI <= rsm.getColumnCount();intI++) {
+				titulos[intI-1] = rsm.getColumnName(intI);
 			}
-			//criando o tablemodel
 			ret = new DefaultTableModel(titulos,0);
-			//Adicionando os registros ao table model
-			while(rs.next()) {
+			
+			while (rs.next()) {
 				Object obj[] = new Object[rsm.getColumnCount()];
-				for (int intI=1;intI<=rsm.getColumnCount();intI++) {
-					obj[intI - 1] = rs.getObject(intI);
+				for (int intI=1;intI <= rsm.getColumnCount();intI++) {
+					obj[intI-1] = rs.getObject(intI);
 				}
 				ret.addRow(obj);
 			}
 		} catch (SQLException e) {
 			haErro = true;
 			msgErro = e.getMessage();
-			System.out.println(e.getMessage());
 		}
+		
+		
 		return ret;
 	}
 	
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 	public String getDescricao() {
 		return descricao;
 	}
-
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
 	public int getSaldo() {
 		return saldo;
 	}
-
 	public void setSaldo(int saldo) {
 		this.saldo = saldo;
 	}
-
 	public double getPreco() {
 		return preco;
 	}
-
 	public void setPreco(double preco) {
 		this.preco = preco;
 	}
-
-	public String getLocal_estoque() {
-		return local_estoque;
+	public String getLocalEstoque() {
+		return localEstoque;
 	}
-
-	public void setLocal_estoque(String local_estoque) {
-		this.local_estoque = local_estoque;
+	public void setLocalEstoque(String localEstoque) {
+		this.localEstoque = localEstoque;
 	}
-
-	public boolean isHaErro() {
-		return haErro;
-	}
-
-	public void setHaErro(boolean haErro) {
-		this.haErro = haErro;
+	public ConexaoBD getConn() {
+		return conn;
 	}
 
 	public String getMsgErro() {
 		return msgErro;
 	}
-
-	public void setMsgErro(String msgErro) {
-		this.msgErro = msgErro;
+	
+	public boolean getHaErro() {
+		return haErro;
 	}
 
 }
