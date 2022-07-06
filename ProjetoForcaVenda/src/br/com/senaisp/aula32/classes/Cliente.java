@@ -256,7 +256,8 @@ public class Cliente {
 	public void apagar() throws SQLException {
 		conn.conectarBD();
 		String sql = "delete from cliente where id = ?";
-		PreparedStatement stmt = conn.getConector().prepareStatement(sql);
+		PreparedStatement stmt = conn.getConector()
+				                       .prepareStatement(sql);
 		
 		stmt.setInt(1, id);
 		int rowAff = stmt.executeUpdate();

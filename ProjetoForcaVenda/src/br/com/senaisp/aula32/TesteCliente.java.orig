@@ -39,6 +39,7 @@ public class TesteCliente {
 				System.out.println("Numero: " + cli.getNumero());
 				System.out.println("Complemento: " + cli.getComplemento());
 				System.out.println("Data Nascimento: " + cli.getData_nasc());
+<<<<<<< HEAD
 				
 				cli.setNome(cli.getNome() + " - Alterado");
 				cli.setComplemento("Complemento colocado");
@@ -54,6 +55,8 @@ public class TesteCliente {
 				scn.close();
 				
 				
+=======
+>>>>>>> 861b51f55eae7d5b4436ddcc662e3e8cdfcd2b09
 			} else {
 				System.out.println("Cliente não encontrado!");
 			}
@@ -64,5 +67,10 @@ public class TesteCliente {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 861b51f55eae7d5b4436ddcc662e3e8cdfcd2b09
 	}
+
 }
